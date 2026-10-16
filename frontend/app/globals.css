@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens.
+ * Brand: primary #00B5E2 (cyan), secondary #97D700 (lime).
+ * #00B5E2 is too light for white text (about 2.4:1), so buttons on it use dark text, and
+ * text/focus uses of the brand hue use the darker -strong / -ring tones, which pass WCAG contrast.
+ * Status colors (green, amber, red, blue, violet) stay separate from the brand colors.
+ */
+@theme {
+  --color-brand: #00b5e2;          /* primary: buttons, active navigation */
+  --color-brand-hover: #00a3cc;
+  --color-brand-active: #0090b5;
+  --color-brand-strong: #006f8c;   /* links and brand-colored text (5.7:1 on white) */
+  --color-brand-ring: #0089ac;     /* focus indicators (4:1 on white) */
+  --color-brand-tint: #e6f8fd;     /* selected / hovered surfaces */
+  --color-brand-tint-strong: #c9eef9;
+
+  --color-accent: #97d700;         /* secondary: small highlights and selected indicators */
+  --color-accent-tint: #f1fad9;
+  --color-accent-strong: #4f7000;
+
+  --color-surface: #ffffff;
+  --color-canvas: #f6f8fa;         /* page background */
+
+  --breakpoint-wide: 87.5rem;      /* 1400px: the board shows all five steps side by side */
+
+  --radius-control: 0.5rem;        /* buttons, inputs, dropdowns */
+  --radius-panel: 0.75rem;         /* cards and dialogs */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-slate-900);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+/*
+ * Cursors. Tailwind's reset leaves buttons with the arrow cursor, so say it once here:
+ * anything that can be clicked shows a pointer, and disabled controls say they are unavailable.
+ * Plain text, cards and table rows are NOT listed, so they keep the normal cursor.
+ */
+a[href],
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+[role="option"]:not([data-disabled]),
+label:has(> input[type="radio"]:not(:disabled)),
+input[type="radio"]:not(:disabled) {
+  cursor: pointer;
+}
+button:disabled,
+input:disabled,
+textarea:disabled,
+[aria-disabled="true"],
+[data-disabled],
+label:has(> input:disabled) {
+  cursor: not-allowed;
+}
+
+/* One visible focus style for everything (keyboard only). */
+:focus-visible {
+  outline: 2px solid var(--color-brand-ring);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-brand-tint-strong);
+}
+
+/*
+ * Tables: on phones every row becomes a small card (label on the left, value on the right),
+ * so nothing needs sideways scrolling. Cells get their label from data-label (see Td in ui.tsx).
+ */
+@media (max-width: 47.999rem) {
+  .table-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .table-stack,
+  .table-stack tbody,
+  .table-stack tr {
+    display: block;
+  }
+  .table-stack tr {
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--color-slate-200);
+  }
+  .table-stack tbody tr:first-child {
+    border-top: 0;
+  }
+  .table-stack td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.375rem 1rem;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  .table-stack td::before {
+    content: attr(data-label);
+    flex: none;
+    max-width: 45%;
+    padding-top: 0.125rem;
+    overflow-wrap: normal;
+    color: var(--color-slate-500);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  .table-stack td[data-label=""]::before,
+  .table-stack td:not([data-label])::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

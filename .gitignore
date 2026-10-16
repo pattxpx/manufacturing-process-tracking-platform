@@ -1,0 +1,22 @@
+.DS_Store
+.env
+.env.local
+.next-*/
+.next/
+.pytest_cache/
+.venv/
+__pycache__/
+**/e2e/.auth/
+node_modules/
+
+# database dumps and backups, secrets, generated output
+*.sql
+*.dump
+*.bak
+*.pem
+*.key
+*.log
+*.tsbuildinfo
+test-results/
+playwright-report/
+.coverage
